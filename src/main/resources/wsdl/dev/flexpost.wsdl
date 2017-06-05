@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://api.accessbankplc.com/core/flex/12.0/post"
+	xmlns:tns="http://api.accessbankplc.com/core/flex/12.0/post" xmlns:fcubs="http://api.accessbankplc.com/core/flex/12.0">
+  <wsdl:documentation>
+    Service: FlexPost Service
+    Version: 3.0
+    Owner: Access Bank Plc
+  </wsdl:documentation>
+  <wsdl:types>
+    <xsd:schema elementFormDefault="qualified" targetNamespace="http://api.accessbankplc.com/core/flex/12.0/post">
+      <xsd:import namespace="http://api.accessbankplc.com/core/flex/12.0"  schemaLocation="../fcubs.xsd"/>
+      <xsd:simpleType name="MultiPostType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="MultiCredit"/>
+          <xsd:enumeration value="MultiDebit"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="PostReq">
+        <xsd:sequence minOccurs="1" maxOccurs="1">
+          <xsd:element name="MsgId" type="xsd:string" nillable="true" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="ModuleName" type="xsd:string" nillable="true" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="Initiator" type="fcubs:FlexcubeUser" maxOccurs="1" minOccurs="0" />
+          <xsd:element name="Approver" type="fcubs:FlexcubeUser" maxOccurs="1" minOccurs="0" />
+          <xsd:element name="AuditDetails" type="xsd:string" nillable="true" maxOccurs="1" minOccurs="1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="SingleEntry">
+        <xsd:sequence>
+          <xsd:element name="CreditAccount" type="fcubs:Account" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="DebitAccount" type="fcubs:Account" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="Amount" type="xsd:decimal" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="Currency" type="fcubs:ISOCurrency" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="Narration" type="xsd:string" nillable="true" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="PaymentReference" type="xsd:string" nillable="true" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="NoCOT" type="xsd:boolean" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="ValueDate" type="xsd:date" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="PostingBranch" type="xsd:int" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="BatchNumber" type="xsd:int" maxOccurs="1" minOccurs="1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="SingleEntryWithMIS">
+        <xsd:complexContent>
+          <xsd:extension base="tns:SingleEntry">
+            <xsd:sequence>
+              <xsd:element name="TransactionMisCode1" type="xsd:string" maxOccurs="1" minOccurs="1" />
+              <xsd:element name="TransactionMisCode2" type="xsd:string" maxOccurs="1" minOccurs="1" />
+              <xsd:element name="CompMis" type="tns:CompMisGroup" maxOccurs="1" minOccurs="1" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="CompMisGroup">
+        <xsd:sequence>
+          <xsd:element name="CompMisField" type="xsd:string" maxOccurs="10" minOccurs="10" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MultiEntry">
+        <xsd:sequence>
+          <xsd:element name="Items" type="tns:MultiPostItems" minOccurs="1" maxOccurs="1"/>
+          <xsd:element name="ActionAccount" type="fcubs:Account" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="PaymentReference" type="xsd:string" nillable="true" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="Narration" type="xsd:string" nillable="true" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="MultiPostType" type="tns:MultiPostType" minOccurs="1" maxOccurs="1"/>
+          <xsd:element name="Currency" type="fcubs:ISOCurrency" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="ValueDate" type="xsd:date" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="PostingBranch" type="xsd:int" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="BatchNumber" type="xsd:int" maxOccurs="1" minOccurs="1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MultiEntryWithMIS">
+        <xsd:complexContent>
+          <xsd:extension base="tns:MultiEntry">
+            <xsd:sequence>
+              <xsd:element name="TransactionMisCode1" type="xsd:string" maxOccurs="1" minOccurs="1" />
+              <xsd:element name="TransactionMisCode2" type="xsd:string" maxOccurs="1" minOccurs="1" />
+              <xsd:element name="CompMis" type="tns:CompMisGroup" maxOccurs="1" minOccurs="1" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="MultiPostItem">
+        <xsd:sequence>
+          <xsd:element name="ContraAccount" type="fcubs:Account" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="Amount" type="xsd:decimal" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="Narration" type="xsd:string" nillable="true" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="PaymentReference" type="xsd:string" nillable="true" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="NoCOT" type="xsd:boolean" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="TransactionMisCode1" type="xsd:string" nillable="true" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="TransactionMisCode2" type="xsd:string" nillable="true" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="CompMis" type="tns:CompMisGroup" nillable="true" maxOccurs="1" minOccurs="1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="MultiPostItems">
+        <xsd:sequence>
+          <xsd:element minOccurs="2" maxOccurs="unbounded" name="Item" type="tns:MultiPostItem"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BatchEntry">
+        <xsd:sequence>
+          <xsd:element name="Items" type="tns:BatchPostItems" minOccurs="1" maxOccurs="1"/>
+          <xsd:element name="Currency" type="fcubs:ISOCurrency" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="ValueDate" type="xsd:date" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="PostingBranch" type="xsd:int" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="BatchNumber" type="xsd:int" maxOccurs="1" minOccurs="1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BatchPostItem">
+        <xsd:sequence>
+          <xsd:element name="EntryItemAccount" type="fcubs:Account" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="TranType" type="fcubs:ItemTranType" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="Amount" type="xsd:decimal" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="Narration" type="xsd:string" nillable="true" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="PaymentReference" type="xsd:string" nillable="true" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="ValueDate" type="xsd:date" maxOccurs="1" minOccurs="0" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="BatchPostItems">
+        <xsd:sequence>
+          <xsd:element minOccurs="2" maxOccurs="unbounded" name="Item" type="tns:BatchPostItem"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TranBase">
+        <xsd:sequence>
+          <xsd:element name="CreditAccount" type="fcubs:Account" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="DebitAccount" type="fcubs:Account" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="Amount" type="xsd:decimal" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="Currency" type="fcubs:ISOCurrency" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="TranDate" type="xsd:date" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="ValueDate" type="xsd:date" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="PostingBranch" type="xsd:int" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="BatchNumber" type="xsd:int" maxOccurs="1" minOccurs="0" />
+          <xsd:element name="TrackReverse" type="xsd:string" nillable="true" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="InstrumentDate" type="xsd:date" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="InstrumentNo" type="xsd:string" nillable="true" maxOccurs="1" minOccurs="1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="FlexPostRsp">
+        <xsd:sequence>
+          <xsd:element name="MsgId" type="xsd:string" nillable="true" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="Reference" type="xsd:string" nillable="true" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="ResponseCode" type="fcubs:ISOResponseCode" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="ResponseMessage" type="xsd:string" nillable="true" maxOccurs="1" minOccurs="1" />
+          <xsd:element name="ResponseData" type="xsd:string" nillable="true" maxOccurs="1" minOccurs="1" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="SinglePostReq">
+        <xsd:complexContent>
+          <xsd:extension base="tns:PostReq">
+            <xsd:sequence>
+              <xsd:element name="Posting" type="tns:SingleEntry" maxOccurs="1" minOccurs="1" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="SinglePostWithMISReq">
+        <xsd:complexContent>
+          <xsd:extension base="tns:PostReq">
+            <xsd:sequence>
+              <xsd:element name="Posting" type="tns:SingleEntryWithMIS" maxOccurs="1" minOccurs="1" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="MultiPostReq">
+        <xsd:complexContent>
+          <xsd:extension base="tns:PostReq">
+            <xsd:sequence>
+              <xsd:element name="Posting" type="tns:MultiEntry" maxOccurs="1" minOccurs="1" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="MultiPostWithMISReq">
+        <xsd:complexContent>
+          <xsd:extension base="tns:PostReq">
+            <xsd:sequence>
+              <xsd:element name="Posting" type="tns:MultiEntryWithMIS" maxOccurs="1" minOccurs="1" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="BatchPostReq">
+        <xsd:complexContent>
+          <xsd:extension base="tns:PostReq">
+            <xsd:sequence>
+              <xsd:element name="Posting" type="tns:BatchEntry" maxOccurs="1" minOccurs="1" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <!-- these guys wont show up in generated classes, 
+      but they create the wrapping for WCF DataContractSerializer -->
+      <!-- Begin WCF wrappers -->
+      <xsd:element name="SinglePost">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="request" type="tns:SinglePostReq" nillable="true"></xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="SinglePostResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="response" type="tns:FlexPostRsp" nillable="true"></xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="SinglePostWithMIS">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="request" type="tns:SinglePostWithMISReq" nillable="true"></xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="SinglePostWithMISResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="response" type="tns:FlexPostRsp" nillable="true"></xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="MultiPost">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="request" type="tns:MultiPostReq" nillable="true"></xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="MultiPostResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="response" type="tns:FlexPostRsp" nillable="true"></xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="MultiPostWithMIS">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="request" type="tns:MultiPostWithMISReq" nillable="true"></xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="MultiPostWithMISResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="response" type="tns:FlexPostRsp" nillable="true"></xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="BatchPost">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="request" type="tns:BatchPostReq" nillable="true"></xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="BatchPostResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="response" type="tns:FlexPostRsp" nillable="true"></xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ReversalPost">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="request" type="tns:PostReq" nillable="true"></xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ReversalPostResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="response" type="tns:FlexPostRsp" nillable="true"></xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+
+      <!-- end of wrappers -->
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IFlexPost_SinglePost_InputMessage">
+    <wsdl:part name="parameters" element="tns:SinglePost"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="IFlexPost_SinglePost_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SinglePostResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="IFlexPost_SinglePostWithMIS_InputMessage">
+    <wsdl:part name="parameters" element="tns:SinglePostWithMIS"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="IFlexPost_SinglePostWithMIS_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SinglePostWithMISResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="IFlexPost_MultiPost_InputMessage">
+    <wsdl:part name="parameters" element="tns:MultiPost"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="IFlexPost_MultiPost_OutputMessage">
+    <wsdl:part name="parameters" element="tns:MultiPostResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="IFlexPost_MultiPostWithMIS_InputMessage">
+    <wsdl:part name="parameters" element="tns:MultiPostWithMIS"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="IFlexPost_MultiPostWithMIS_OutputMessage">
+    <wsdl:part name="parameters" element="tns:MultiPostWithMISResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="IFlexPost_BatchPost_InputMessage">
+    <wsdl:part name="parameters" element="tns:BatchPost"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="IFlexPost_BatchPost_OutputMessage">
+    <wsdl:part name="parameters" element="tns:BatchPostResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="IFlexPost_ReversalPost_InputMessage">
+    <wsdl:part name="parameters" element="tns:ReversalPost"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="IFlexPost_ReversalPost_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ReversalPostResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="IFlexPost">
+    <wsdl:operation name="SinglePost">
+      <wsdl:input message="tns:IFlexPost_SinglePost_InputMessage"></wsdl:input>
+      <wsdl:output message="tns:IFlexPost_SinglePost_OutputMessage"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SinglePostWithMIS">
+      <wsdl:input message="tns:IFlexPost_SinglePostWithMIS_InputMessage"></wsdl:input>
+      <wsdl:output message="tns:IFlexPost_SinglePostWithMIS_OutputMessage"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MultiPost">
+      <wsdl:input message="tns:IFlexPost_MultiPost_InputMessage"></wsdl:input>
+      <wsdl:output message="tns:IFlexPost_MultiPost_OutputMessage"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MultiPostWithMIS">
+      <wsdl:input message="tns:IFlexPost_MultiPostWithMIS_InputMessage"></wsdl:input>
+      <wsdl:output message="tns:IFlexPost_MultiPostWithMIS_OutputMessage"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BatchPost">
+      <wsdl:input message="tns:IFlexPost_BatchPost_InputMessage"></wsdl:input>
+      <wsdl:output message="tns:IFlexPost_BatchPost_OutputMessage"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReversalPost">
+      <wsdl:input message="tns:IFlexPost_ReversalPost_InputMessage"></wsdl:input>
+      <wsdl:output message="tns:IFlexPost_ReversalPost_OutputMessage"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_IFlexPost" type="tns:IFlexPost">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SinglePost">
+      <soap:operation soapAction="http://api.accessbankplc.com/core/flex/12.0/post/SinglePost" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SinglePostWithMIS">
+      <soap:operation soapAction="http://api.accessbankplc.com/core/flex/12.0/post/SinglePostWithMIS" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MultiPost">
+      <soap:operation soapAction="http://api.accessbankplc.com/core/flex/12.0/post/MultiPost" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MultiPostWithMIS">
+      <soap:operation soapAction="http://api.accessbankplc.com/core/flex/12.0/post/MultiPostWithMIS" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BatchPost">
+      <soap:operation soapAction="http://api.accessbankplc.com/core/flex/12.0/post/BatchPost" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReversalPost">
+      <soap:operation soapAction="http://api.accessbankplc.com/core/flex/12.0/post/ReversePost" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="FlexPost">
+    <wsdl:port binding="tns:BasicHttpBinding_IFlexPost" name="BasicHttpBinding_IFlexPost">
+      <soap:address location="http://10.1.8.235:8730/services/flexpost" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
