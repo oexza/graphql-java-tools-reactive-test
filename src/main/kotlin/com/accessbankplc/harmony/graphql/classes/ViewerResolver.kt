@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture
  */
 class ViewerResolver: GraphQLResolver<Viewer>{
 
-    fun adLogin(viewer: Viewer, adLoginInput: ADLoginInput): CompletableFuture<ADUser>? {
+    fun adLogin(viewer: Viewer, adLoginInput: ADLoginInput): CompletableFuture<ADUser> {
         return CompletableFuture.completedFuture(ADUser(id = "orepeace", displayName = "akinwaleoy"))
     }
 }
