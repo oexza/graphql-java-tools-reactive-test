@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.test</groupId>
-    <artifactId>harmony</artifactId>
+    <artifactId>test-graphql-java-tools-reactive</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -51,7 +51,7 @@
         <dependency>
             <groupId>com.graphql-java</groupId>
             <artifactId>graphql-java-tools</artifactId>
-            <version>3.1.0</version>
+            <version>3.1.2</version>
         </dependency>
         <dependency>
             <groupId>com.graphql-java</groupId>
