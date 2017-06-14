@@ -4,6 +4,7 @@ import com.accessbankplc.harmony.graphql.SchemaProvider
 import com.github.bsideup.graphql.reactive.Change
 import com.github.bsideup.graphql.reactive.ReactiveExecutionStrategy
 import graphql.GraphQL
+import io.reactivex.Flowable
 import io.reactivex.Single
 import org.reactivestreams.Publisher
 import org.springframework.beans.factory.annotation.Autowired
@@ -39,7 +40,7 @@ class GraphQLController @Autowired constructor(val schemaProvider: SchemaProvide
             val result = graphQL.execute(query.query, query.operationName, context, query.variables ?: mapOf())
 
             //val data: Map<*, *>? = result.getData()
-            val d = result.getData<Publisher<Change>>()
+            val d = result.getData<Flowable<Change>>()
 
 
             val responseString = mutableMapOf<String, Any?>()
@@ -51,7 +52,7 @@ class GraphQLController @Autowired constructor(val schemaProvider: SchemaProvide
 //            }
 
             //Mono.just(responseString)
-            Single.fromPublisher(d).takeIf {true }!!.map {
+            Single.fromPublisher(d.take(1)).map {
                 change ->
                 println(change.data)
                 val resp = mutableMapOf<String, Any?>()
