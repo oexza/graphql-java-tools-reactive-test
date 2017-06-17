@@ -43,7 +43,7 @@ class GraphQLController @Autowired constructor(val schemaProvider: SchemaProvide
             val d = result.getData<Flowable<Change>>()
 
 
-            val responseString = mutableMapOf<String, Any?>()
+            //val responseString = mutableMapOf<String, Any?>()
 
             //responseString.put("data", data ?: null)
 //            result.errors?.let {
@@ -69,7 +69,7 @@ class GraphQLController @Autowired constructor(val schemaProvider: SchemaProvide
     }
 
     companion object {
-        class GraphQLRequestQuery(var query: String, var operationName: String?, var variables: MutableMap<String, Any>?)
+        data class GraphQLRequestQuery(var query: String, var operationName: String?, var variables: MutableMap<String, Any>?)
         data class GraphQLContext(val ipAddress: String, val port: Int)
     }
 }
